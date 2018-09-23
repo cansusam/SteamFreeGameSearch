@@ -89,7 +89,6 @@ public class MainGUI  {
                                 while (m.find()) {
                                     String fetched = inputLine.replaceAll("\\<.*?>","");
                                     String arr[] = fetched.split("---", 2);
-                                    //System.out.print(Arrays.toString(arr));
                                     model.addElement(arr[0]);
                                 }
                                 //break;
