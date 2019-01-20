@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="Steam Free For Search:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Steam_Free_For_Search_jar</output-path>
-    <root id="archive" name="Steam Free For Search.jar">
-      <element id="module-output" name="Steam Free For Search" />
-    </root>
-  </artifact>
-</component>
