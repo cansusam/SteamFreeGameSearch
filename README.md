@@ -5,7 +5,7 @@ Aim is to catch "free" game announcements from Steam News page by simply searchi
 
 ## Update
 
-[indiegamebundles](indiegamebundles.com) website added for free game announcement search.
+[indiegamebundles](www.indiegamebundles.com) website added for free game announcement search.
 
 ## ScreenShot
 
