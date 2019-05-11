@@ -1,11 +1,11 @@
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.UnknownHostException;
+import java.net.*;
 import javax.swing.*;
-import java.net.URL;
 
+import javafx.scene.control.Hyperlink;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -13,13 +13,14 @@ import org.jsoup.select.Elements;
 /**
  * Created by ecc_can on 3/13/2015.
  */
-public class MainGUI  {
+public class MainGUI {
 
 
     public JButton buttonSearch;
     public JComboBox comboBoxWhereToSearch;
     private JPanel panel;
     private JList list1;
+    private JButton goToWebSite;
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Steam Free Game Search");
@@ -36,7 +37,7 @@ public class MainGUI  {
             URL url = new URL("https://store.steampowered.com/news/?headlines=1");
 
             //open a connection to that source
-            HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
+            HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
 
             //trying to retrieve data from the source. If there
             //is no connection, this line will fail
@@ -46,8 +47,7 @@ public class MainGUI  {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
@@ -57,13 +57,12 @@ public class MainGUI  {
 
     public MainGUI() {
 
-        comboBoxWhereToSearch.addItem(new ComboItem("Steam","s"));
-        comboBoxWhereToSearch.addItem(new ComboItem("Indie","i"));
+        comboBoxWhereToSearch.addItem(new ComboItem("Steam", "s"));
+        comboBoxWhereToSearch.addItem(new ComboItem("Indie", "i"));
         buttonSearch.requestFocus();
         try {
             Thread.sleep(10L);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
 
         }
         buttonSearch.addActionListener(new ActionListener() {
@@ -85,26 +84,47 @@ public class MainGUI  {
                 }
             }
         });
+        goToWebSite.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String url = "";
+                if (String.valueOf(comboBoxWhereToSearch.getSelectedItem().toString()) == "Steam") {
+                    url = "https://store.steampowered.com/news/?headlines=1";
+                } else if (String.valueOf(comboBoxWhereToSearch.getSelectedItem().toString()) == "Indie") {
+                    url = "https://www.indiegamebundles.com/category/free/";
+                }
+                //Assume browser is supported on Desktop API
+                try {
+                    if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                        Desktop.getDesktop().browse(new URI(url));
+                    }
+                } catch (URISyntaxException e1) {
+
+                } catch (IOException e2) {
+
+                }
+
+            }
+        });
     }
 
-    public void getResultsFromSites(){
+    public void getResultsFromSites() {
         try {
             if (String.valueOf(comboBoxWhereToSearch.getSelectedItem().toString()) == "Steam") {
                 Document doc = Jsoup.connect("https://store.steampowered.com/news/?headlines=1").get();
                 Elements listOfNews = doc.select("div.title");
                 DefaultListModel model = new DefaultListModel();
-                for(int i=0; i<listOfNews.size(); i++){
-                    if( listOfNews.get(i).childNodes().get(0).childNodes().get(0).toString().contains("Free") ||
-                            listOfNews.get(i).childNodes().get(0).childNodes().get(0).toString().contains("free") )
+                for (int i = 0; i < listOfNews.size(); i++) {
+                    if (listOfNews.get(i).childNodes().get(0).childNodes().get(0).toString().contains("Free") ||
+                            listOfNews.get(i).childNodes().get(0).childNodes().get(0).toString().contains("free"))
                         model.addElement(listOfNews.get(i).childNodes().get(0).childNodes().get(0).toString());
                 }
                 list1.setModel(model);
-            } else if (String.valueOf(comboBoxWhereToSearch.getSelectedItem().toString()) == "Indie"){
+            } else if (String.valueOf(comboBoxWhereToSearch.getSelectedItem().toString()) == "Indie") {
                 Document doc = Jsoup.connect("https://www.indiegamebundles.com/category/free/").get();
                 Elements listOfNews = doc.select("div.item-details");
                 DefaultListModel model = new DefaultListModel();
-                for(int i=0; i<listOfNews.size(); i++){
-                    model.addElement(listOfNews.get(i).childNodes().get(0).childNodes().get(0).childNodes().toString().replaceAll("\\]|\\[",""));
+                for (int i = 0; i < listOfNews.size(); i++) {
+                    model.addElement(listOfNews.get(i).childNodes().get(0).childNodes().get(0).childNodes().toString().replaceAll("\\]|\\[", ""));
                 }
                 list1.setModel(model);
             }
@@ -112,4 +132,5 @@ public class MainGUI  {
             throw new RuntimeException(ie);
         }
     }
+
 }
