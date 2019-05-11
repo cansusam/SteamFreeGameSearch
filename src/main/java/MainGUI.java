@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.*;
 import javax.swing.*;
 
-import javafx.scene.control.Hyperlink;
 import org.jsoup.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
